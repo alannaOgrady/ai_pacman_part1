@@ -86,14 +86,15 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    # print "Start:", problem.getStartState()
+    # print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    # print "Start's successors:", problem.getSuccessors(problem.getStartState())
     #initialise LIFO queue and visited array
     frontier = util.Stack()
     visistedArray = []
     frontier.push((problem.getStartState(), []))
     visistedArray.append(problem.getStartState())
+    sucessor_list = []
     
 
     #while still nodes to search
@@ -101,54 +102,29 @@ def depthFirstSearch(problem):
         #get new state
         #get action taken
         #directions to goal will be actions which have not been popped off the stack
+        
         state, actions_taken = frontier.pop()
-        print "state: ", state, "action taken: ", actions_taken
-        #print "action taken: ", actions_taken
-        #check if state has already been visited
-        if state not in visistedArray:
-            visistedArray.append(state)
+        visistedArray.append(state)
+        #print "state: ", state, "action taken: ", actions_taken
+        if problem.isGoalState(state):
+                    #print "States Visited: ", visistedArray
+                    #print "DIRECTIONS: ", actions_taken + [next_action]
+                    return actions_taken
         
-        #check state had sucessors
-        if problem.getSuccessors(state) is not None:
-            print state, "Successors: ", problem.getSuccessors(state)
-            #get successors which has not been visited and add to stack
-            for element in problem.getSuccessors(state):
-                next_sucessor = element[0]
-                next_action = element[1]
-                if next_sucessor not in visistedArray:
-                    #check if sucessor id goal state - if so, just return directions
-                    if problem.isGoalState(next_sucessor):
-                        print "States Visited: ", visistedArray
-                        print "DIRECTIONS: ", actions_taken + [next_action]
-                        return actions_taken + [next_action]
-                    else:
-                        #otehrwise add successor to frontier to continue search
-                        frontier.push((next_sucessor, actions_taken + [next_action]))
-
-                    
+        #print state, "Successors: ", problem.getSuccessors(state)
+        #get successors which has not been visited and add to stack
+        sucessor_list = problem.getSuccessors(state)
+        #print sucessor_list
+        for element in sucessor_list:
             
-        
-    "*** YOUR CODE HERE ***"
-    # Frontier = util.Stack()
-    # Visited = []
-    # Frontier.push( (problem.getStartState(), []) )
-    # Visited.append( problem.getStartState() )
+            next_sucessor = element[0]
+            next_action = element[1]
+            if next_sucessor not in visistedArray:
+                #otehrwise add successor to frontier to continue search
+                #print (actions_taken + [next_action])
+                frontier.push((next_sucessor, actions_taken + [next_action]))
+                #visistedArray.append(next_sucessor)
 
-    # while Frontier.isEmpty() == 0:
-    #     state, actions = Frontier.pop()
-    #     print state
-
-    #     for next in problem.getSuccessors(state):
-    #         print problem.getSuccessors(state)
-    #         n_state = next[0]
-    #         n_direction = next[1]
-    #         if n_state not in Visited:
-    #             if problem.isGoalState(n_state):
-    #                 #print 'Find Goal'
-    #                 return actions + [n_direction]
-    #             else:
-    #                 Frontier.push( (n_state, actions + [n_direction]) )
-    #                 Visited.append( n_state )
 
     util.raiseNotDefined()
 
@@ -159,6 +135,7 @@ def breadthFirstSearch(problem):
     visistedArray = []
     frontier.push((problem.getStartState(), []))
     visistedArray.append(problem.getStartState())
+    sucessor_list = []
     
 
     #while still nodes to search
@@ -167,28 +144,20 @@ def breadthFirstSearch(problem):
         #get action taken
         #directions to goal will be actions which have not been popped off the stack
         state, actions_taken = frontier.pop()
-        print "state: ", state, "action taken: ", actions_taken
-        #print "action taken: ", actions_taken
-        #check if state has already been visited
-        if state not in visistedArray:
-            visistedArray.append(state)
         
-        #check state had sucessors
-        if problem.getSuccessors(state) is not None:
-            print state, "Successors: ", problem.getSuccessors(state)
-            #get successors which has not been visited and add to stack
-            for element in problem.getSuccessors(state):
-                next_sucessor = element[0]
-                next_action = element[1]
-                if next_sucessor not in visistedArray:
-                    #check if sucessor id goal state - if so, just return directions
-                    if problem.isGoalState(next_sucessor):
-                        print "States Visited: ", visistedArray
-                        print "DIRECTIONS: ", actions_taken + [next_action]
-                        return actions_taken + [next_action]
-                    else:
-                        #otehrwise add successor to frontier to continue search
-                        frontier.push((next_sucessor, actions_taken + [next_action]))
+        if problem.isGoalState(state):
+                    return actions_taken
+        
+        #get successors which has not been visited and add to stack
+        sucessor_list = problem.getSuccessors(state)
+        #print sucessor_list
+        for element in sucessor_list:
+            next_sucessor = element[0]
+            next_action = element[1]
+            if next_sucessor not in visistedArray:
+                #otehrwise add successor to frontier to continue search
+                frontier.push((next_sucessor, actions_taken + [next_action]))
+                visistedArray.append(next_sucessor)
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
