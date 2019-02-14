@@ -154,7 +154,41 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
+   #initialise LIFO queue and visited array
+    frontier = util.Queue()
+    visistedArray = []
+    frontier.push((problem.getStartState(), []))
+    visistedArray.append(problem.getStartState())
+    
+
+    #while still nodes to search
+    while not frontier.isEmpty():
+        #get new state
+        #get action taken
+        #directions to goal will be actions which have not been popped off the stack
+        state, actions_taken = frontier.pop()
+        print "state: ", state, "action taken: ", actions_taken
+        #print "action taken: ", actions_taken
+        #check if state has already been visited
+        if state not in visistedArray:
+            visistedArray.append(state)
+        
+        #check state had sucessors
+        if problem.getSuccessors(state) is not None:
+            print state, "Successors: ", problem.getSuccessors(state)
+            #get successors which has not been visited and add to stack
+            for element in problem.getSuccessors(state):
+                next_sucessor = element[0]
+                next_action = element[1]
+                if next_sucessor not in visistedArray:
+                    #check if sucessor id goal state - if so, just return directions
+                    if problem.isGoalState(next_sucessor):
+                        print "States Visited: ", visistedArray
+                        print "DIRECTIONS: ", actions_taken + [next_action]
+                        return actions_taken + [next_action]
+                    else:
+                        #otehrwise add successor to frontier to continue search
+                        frontier.push((next_sucessor, actions_taken + [next_action]))
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
