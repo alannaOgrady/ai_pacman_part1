@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+import heapq
 
 class SearchProblem:
     """
@@ -72,6 +73,26 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+
+
+#have function here to hide from rest of code as is specific to this search
+#altered the update function to allow us to update the actions taken to node (if cost was smaller)
+def update_with_actions(frontier, item, priority):
+    print "HERE"
+    # If item already in priority queue with higher priority, update its priority and rebuild the heap.
+    # If item already in priority queue with equal or lower priority, do nothing.
+    # If item not in priority queue, do the same thing as self.push.
+    for index, (p, c, i) in enumerate(frontier.heap):
+        if i[0] == item[0]:
+            if p <= priority:
+                break
+            del frontier.heap[index]
+            frontier.heap.append((priority, c, item))
+            heapq.heapify(frontier.heap)
+            break
+    else:
+        frontier.push(item, priority)
+
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -86,9 +107,6 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    # print "Start:", problem.getStartState()
-    # print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    # print "Start's successors:", problem.getSuccessors(problem.getStartState())
     #initialise LIFO queue and visited array
     frontier = util.Stack()
     visistedArray = []
@@ -162,6 +180,7 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
+
     frontier = util.PriorityQueue()
     visistedArray = []
     frontier.push((problem.getStartState(), []), 0)
@@ -175,11 +194,12 @@ def uniformCostSearch(problem):
         #get action taken
         #directions to goal will be actions which have not been popped off the stack
         state, actions_taken = frontier.pop()
-        #print state
         
         if problem.isGoalState(state):
                     return actions_taken
-        #visistedArray.append(state)
+        #marking as visited after popping from queue as there may be multiple ways to get to particular node and we want to find smallest
+        if state not in visistedArray:
+            visistedArray.append(state)
         #get successors which has not been visited and add to stack
         sucessor_list = problem.getSuccessors(state)
         #print sucessor_list
@@ -190,13 +210,8 @@ def uniformCostSearch(problem):
             cost = problem.getCostOfActions(actions_taken + [next_action])
             #print next_sucessor, cost
             if next_sucessor not in visistedArray:
-                #otehrwise add successor to frontier to continue search
-                print next_sucessor, cost
-                
-                frontier.update((next_sucessor, actions_taken + [next_action]), cost)
-
-                #frontier.push((next_sucessor, actions_taken + [next_action]), cost)
-                visistedArray.append(next_sucessor)
+                #add to queue or update path if smaller
+                update_with_actions(frontier, (next_sucessor, actions_taken + [next_action]), cost)
 
     util.raiseNotDefined()
 
