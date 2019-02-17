@@ -225,7 +225,41 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+    frontier = util.PriorityQueue()
+    visistedArray = []
+    #add node of start state and no actions and combination of heurisitc and actual path cost (right now just heuristic) to priority queue
+    frontier.push(Node(problem.getStartState(), []), heuristic(problem.getStartState(), problem))
+    visistedArray.append(problem.getStartState())
+    sucessor_list = []
+    
+
+    #while still nodes to search
+    while not frontier.isEmpty():
+        #get new state
+        #get action taken
+        #directions to goal will be actions which have not been popped off the stack
+        node = frontier.pop()
+        state = node.state
+        actions_taken = node.actions
+        
+        if problem.isGoalState(state):
+                    return actions_taken
+        #marking as visited after popping from queue as there may be multiple ways to get to particular node and we want to find smallest
+        if state not in visistedArray:
+            visistedArray.append(state)
+        #get successors which has not been visited and add to stack
+        sucessor_list = problem.getSuccessors(state)
+        for element in sucessor_list:
+            next_sucessor = element[0]
+            next_action = element[1]
+            #check cost
+            cost = problem.getCostOfActions(actions_taken + [next_action])
+            combo = cost + heuristic(next_sucessor, problem)
+            #print next_sucessor, cost
+            if next_sucessor not in visistedArray:
+                #add to queue or update path if smaller
+                update_with_actions(frontier, Node(next_sucessor, actions_taken + [next_action]), combo)
+
     util.raiseNotDefined()
 
 
