@@ -62,6 +62,12 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
+class Node:
+    """docstring for ClassName"""
+    def __init__(self, state, actions):
+        self.state = state
+        self.actions = actions
+        
 
 def tinyMazeSearch(problem):
     """
@@ -75,23 +81,22 @@ def tinyMazeSearch(problem):
 
 
 
-#have function here to hide from rest of code as is specific to this search
+
 #altered the update function to allow us to update the actions taken to node (if cost was smaller)
-def update_with_actions(frontier, item, priority):
-    print "HERE"
+def update_with_actions(frontier, node, priority):
     # If item already in priority queue with higher priority, update its priority and rebuild the heap.
     # If item already in priority queue with equal or lower priority, do nothing.
     # If item not in priority queue, do the same thing as self.push.
     for index, (p, c, i) in enumerate(frontier.heap):
-        if i[0] == item[0]:
+        if i.state == node.state:
             if p <= priority:
                 break
             del frontier.heap[index]
-            frontier.heap.append((priority, c, item))
+            frontier.heap.append((priority, c, node))
             heapq.heapify(frontier.heap)
             break
     else:
-        frontier.push(item, priority)
+        frontier.push(node, priority)
 
 def depthFirstSearch(problem):
     """
@@ -110,7 +115,7 @@ def depthFirstSearch(problem):
     #initialise LIFO queue and visited array
     frontier = util.Stack()
     visistedArray = []
-    frontier.push((problem.getStartState(), []))
+    frontier.push(Node(problem.getStartState(), []))
     visistedArray.append(problem.getStartState())
     sucessor_list = []
     
@@ -121,27 +126,21 @@ def depthFirstSearch(problem):
         #get action taken
         #directions to goal will be actions which have not been popped off the stack
         
-        state, actions_taken = frontier.pop()
+        node = frontier.pop()
+        state = node.state
+        actions_taken = node.actions
         visistedArray.append(state)
-        #print "state: ", state, "action taken: ", actions_taken
         if problem.isGoalState(state):
-                    #print "States Visited: ", visistedArray
-                    #print "DIRECTIONS: ", actions_taken + [next_action]
                     return actions_taken
         
-        #print state, "Successors: ", problem.getSuccessors(state)
         #get successors which has not been visited and add to stack
         sucessor_list = problem.getSuccessors(state)
-        #print sucessor_list
         for element in sucessor_list:
-            
             next_sucessor = element[0]
             next_action = element[1]
             if next_sucessor not in visistedArray:
                 #otehrwise add successor to frontier to continue search
-                #print (actions_taken + [next_action])
-                frontier.push((next_sucessor, actions_taken + [next_action]))
-                #visistedArray.append(next_sucessor)
+                frontier.push(Node(next_sucessor, actions_taken + [next_action]))
 
 
     util.raiseNotDefined()
@@ -151,7 +150,7 @@ def breadthFirstSearch(problem):
    #initialise LIFO queue and visited array
     frontier = util.Queue()
     visistedArray = []
-    frontier.push((problem.getStartState(), []))
+    frontier.push(Node(problem.getStartState(), []))
     visistedArray.append(problem.getStartState())
     sucessor_list = []
     
@@ -161,20 +160,21 @@ def breadthFirstSearch(problem):
         #get new state
         #get action taken
         #directions to goal will be actions which have not been popped off the stack
-        state, actions_taken = frontier.pop()
+        node = frontier.pop()
+        state = node.state
+        actions_taken = node.actions
         
         if problem.isGoalState(state):
                     return actions_taken
         
         #get successors which has not been visited and add to stack
         sucessor_list = problem.getSuccessors(state)
-        #print sucessor_list
         for element in sucessor_list:
             next_sucessor = element[0]
             next_action = element[1]
             if next_sucessor not in visistedArray:
-                #otehrwise add successor to frontier to continue search
-                frontier.push((next_sucessor, actions_taken + [next_action]))
+                #otherwise add successor to frontier to continue search
+                frontier.push(Node(next_sucessor, actions_taken + [next_action]))
                 visistedArray.append(next_sucessor)
     util.raiseNotDefined()
 
@@ -183,7 +183,7 @@ def uniformCostSearch(problem):
 
     frontier = util.PriorityQueue()
     visistedArray = []
-    frontier.push((problem.getStartState(), []), 0)
+    frontier.push(Node(problem.getStartState(), []), 0)
     visistedArray.append(problem.getStartState())
     sucessor_list = []
     
@@ -193,7 +193,9 @@ def uniformCostSearch(problem):
         #get new state
         #get action taken
         #directions to goal will be actions which have not been popped off the stack
-        state, actions_taken = frontier.pop()
+        node = frontier.pop()
+        state = node.state
+        actions_taken = node.actions
         
         if problem.isGoalState(state):
                     return actions_taken
@@ -202,7 +204,6 @@ def uniformCostSearch(problem):
             visistedArray.append(state)
         #get successors which has not been visited and add to stack
         sucessor_list = problem.getSuccessors(state)
-        #print sucessor_list
         for element in sucessor_list:
             next_sucessor = element[0]
             next_action = element[1]
@@ -211,7 +212,7 @@ def uniformCostSearch(problem):
             #print next_sucessor, cost
             if next_sucessor not in visistedArray:
                 #add to queue or update path if smaller
-                update_with_actions(frontier, (next_sucessor, actions_taken + [next_action]), cost)
+                update_with_actions(frontier, Node(next_sucessor, actions_taken + [next_action]), cost)
 
     util.raiseNotDefined()
 
