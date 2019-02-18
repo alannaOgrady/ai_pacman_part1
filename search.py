@@ -147,7 +147,7 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-   #initialise LIFO queue and visited array
+    #initialise LIFO queue and visited array
     frontier = util.Queue()
     visistedArray = []
     frontier.push(Node(problem.getStartState(), []))
@@ -163,9 +163,10 @@ def breadthFirstSearch(problem):
         node = frontier.pop()
         state = node.state
         actions_taken = node.actions
+        #print state
         
         if problem.isGoalState(state):
-                    return actions_taken
+            return actions_taken
         
         #get successors which has not been visited and add to stack
         sucessor_list = problem.getSuccessors(state)
