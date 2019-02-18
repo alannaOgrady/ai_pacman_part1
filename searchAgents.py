@@ -319,37 +319,6 @@ class CornersProblem(search.SearchProblem):
 
         util.raiseNotDefined()
 
-    # def getSuccessors(self, state):
-    #     """
-    #     Returns successor states, the actions they require, and a cost of 1.
-    #      As noted in search.py:
-    #         For a given state, this should return a list of triples, (successor,
-    #         action, stepCost), where 'successor' is a successor to the current
-    #         state, 'action' is the action required to get there, and 'stepCost'
-    #         is the incremental cost of expanding to that successor
-    #     """
-    #     x,y = state[0]
-    #     Visited_Corners = state[1]
-    #     successors = []
-    #     for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-    #         # Add a successor state to the successor list if the action is legal
-    #         # Here's a code snippet for figuring out whether a new position hits a wall:
-    #         "*** YOUR CODE HERE ***"
-    #         dx, dy = Actions.directionToVector(action)
-    #         nextx, nexty = int(x + dx), int(y + dy)
-    #         next_node = (nextx, nexty)
-    #         hitsWall = self.walls[nextx][nexty]
-    #         if not hitsWall:
-    #             sucVCorners = list(Visited_Corners) 
-    #             if next_node in self.corners:
-    #                 if next_node not in sucVCorners:
-    #                     sucVCorners.append( next_node )
-    #             successor = ((next_node, sucVCorners), action, 1)
-    #             successors.append(successor)
-
-    #     self._expanded += 1 # DO NOT CHANGE
-    #     return successors
-
     def getSuccessors(self, state):
         """
         Returns successor states, the actions they require, and a cost of 1.
