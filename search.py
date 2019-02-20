@@ -118,24 +118,23 @@ def depthFirstSearch(problem):
     frontier.push(Node(problem.getStartState(), []))
     visistedArray.append(problem.getStartState())
     sucessor_list = []
-    
 
     #while still nodes to search
     while not frontier.isEmpty():
         #get new state
         #get action taken
         #directions to goal will be actions which have not been popped off the stack
-        
         node = frontier.pop()
         state = node.state
         actions_taken = node.actions
         visistedArray.append(state)
         if problem.isGoalState(state):
-                    return actions_taken
+            return actions_taken
         
         #get successors which has not been visited and add to stack
         sucessor_list = problem.getSuccessors(state)
         for element in sucessor_list:
+
             next_sucessor = element[0]
             next_action = element[1]
             if next_sucessor not in visistedArray:
