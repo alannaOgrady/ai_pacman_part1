@@ -41,6 +41,7 @@ import util
 import time
 import search
 import math
+import numpy as np
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -412,14 +413,16 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
+    
+
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
     x1, y1 = state[0]
-    print x1, y1
+    current_position = state[0]
     visited_corners = state[1]
     distances_to_corners = []
-    "*** YOUR CODE HERE ***"
+   
+    
     for corner in corners:
         #check if it has not been visited
         if corner not in visited_corners:
@@ -428,13 +431,13 @@ def cornersHeuristic(state, problem):
             man_dist = abs(x1 - x2) + abs(y1 - y2)
             #heuristic of overall goal (visted all corners) not just to one corner => sum dists
             distances_to_corners.append(man_dist)
-            print "dist to unvisited corners"
+            #print "dist to unvisited corners"
     #if no distances in the list, then all corners visited. GOAL! return 0
-    print distances_to_corners
-    print sum(distances_to_corners)
+    #print distances_to_corners
     if len(distances_to_corners) == 0:
         return 0
-    return min(distances_to_corners) # Default to trivial solution
+    return max(distances_to_corners) # Default to trivial solution
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -537,7 +540,7 @@ def foodHeuristic(state, problem):
         dists_to_food.append(man_dist)
     if len(dists_to_food) == 0:
         return 0
-    return min(dists_to_food)
+    return max(dists_to_food)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -606,9 +609,9 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         """
         x,y = state
         #goal when all food is gone??
-        return self.food[x][y]
-        # if self.food.count() == 0:
-        #     return state
+
+        
+        return state in self.food.asList()
             
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
