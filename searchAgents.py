@@ -228,6 +228,8 @@ class PositionSearchProblem(search.SearchProblem):
             cost += self.costFn((x,y))
         return cost
 
+    
+
 class StayEastSearchAgent(SearchAgent):
     """
     An agent for position search with a cost function that penalizes being in

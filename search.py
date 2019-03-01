@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 import heapq
+import time
 
 class SearchProblem:
     """
@@ -67,7 +68,18 @@ class Node:
     def __init__(self, state, actions):
         self.state = state
         self.actions = actions
-        
+    
+global max_dfs_time
+max_dfs_time = -999
+global max_bfs_time
+max_dfs_time = -999
+global max_ucs_time
+max_dfs_time = -999
+global max_a_star_time
+max_a_star_time = -999 
+
+# def getExpandedStates(self):
+#         return self.expanded_states
 
 def tinyMazeSearch(problem):
     """
@@ -113,6 +125,7 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     #initialise LIFO queue and visited array
+    start = time.time()
     frontier = util.Stack()
     visistedArray = []
     frontier.push(Node(problem.getStartState(), []))
@@ -129,6 +142,9 @@ def depthFirstSearch(problem):
         actions_taken = node.actions
         visistedArray.append(state)
         if problem.isGoalState(state):
+            end = time.time()
+            max_time = end - start
+            print "Time", max_time
             return actions_taken
         
         #get successors which has not been visited and add to stack
@@ -141,12 +157,12 @@ def depthFirstSearch(problem):
                 #otehrwise add successor to frontier to continue search
                 frontier.push(Node(next_sucessor, actions_taken + [next_action]))
 
-
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     #initialise LIFO queue and visited array
+    start = time.time()
     frontier = util.Queue()
     visistedArray = []
     frontier.push(Node(problem.getStartState(), []))
@@ -165,6 +181,9 @@ def breadthFirstSearch(problem):
         #print state
         
         if problem.isGoalState(state):
+            end = time.time()
+            max_time = end - start
+            print "Time", max_time
             return actions_taken
         
         #get successors which has not been visited and add to stack
@@ -180,7 +199,7 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-
+    start = time.time()
     frontier = util.PriorityQueue()
     visistedArray = []
     frontier.push(Node(problem.getStartState(), []), 0)
@@ -198,7 +217,10 @@ def uniformCostSearch(problem):
         actions_taken = node.actions
         
         if problem.isGoalState(state):
-                    return actions_taken
+            end = time.time()
+            max_time = end - start
+            print "Time", max_time
+            return actions_taken
         #marking as visited after popping from queue as there may be multiple ways to get to particular node and we want to find smallest
         if state not in visistedArray:
             visistedArray.append(state)
@@ -225,6 +247,7 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
+    start = time.time()
     frontier = util.PriorityQueue()
     visistedArray = []
     #add node of start state and no actions and combination of heurisitc and actual path cost (right now just heuristic) to priority queue
@@ -243,7 +266,10 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         actions_taken = node.actions
         
         if problem.isGoalState(state):
-                    return actions_taken
+            end = time.time()
+            max_time = end - start
+            print "Time", max_time
+            return actions_taken
         #marking as visited after popping from queue as there may be multiple ways to get to particular node and we want to find smallest
         if state not in visistedArray:
             visistedArray.append(state)
@@ -259,6 +285,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             if next_sucessor not in visistedArray:
                 #add to queue or update path if smaller
                 update_with_actions(frontier, Node(next_sucessor, actions_taken + [next_action]), combo)
+
 
     util.raiseNotDefined()
 
