@@ -610,8 +610,6 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x,y = state
-        #goal when all food is gone??
-
         
         return state in self.food.asList()
             
